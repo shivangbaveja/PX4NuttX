@@ -155,7 +155,7 @@ struct ramtron_dev_s
 #define RAMTRON_CLK_MAX      40*1000*1000UL
 #define RAMTRON_INIT_CLK_DEFAULT  11*1000*1000UL
 
-static struct ramtron_parts_s ramtron_parts[] =
+static const struct ramtron_parts_s ramtron_parts[] =
 {
   {
     "FM25V01",                    /* name */
@@ -166,9 +166,25 @@ static struct ramtron_parts_s ramtron_parts[] =
     40000000                      /* speed */
   },
   {
+    "FM25V01A",                   /* name */
+    0x21,                         /* id1 */
+    0x08,                         /* id2 */
+    16L*1024L,                    /* size */
+    2,                            /* addr_len */
+    40000000                      /* speed */
+  },
+  {
     "FM25V02",                    /* name */
     0x22,                         /* id1 */
     0x00,                         /* id2 */
+    32L*1024L,                    /* size */
+    2,                            /* addr_len */
+    40000000                      /* speed */
+  },
+  {
+    "FM25V02A",                    /* name */
+    0x22,                         /* id1 */
+    0x08,                         /* id2 */
     32L*1024L,                    /* size */
     2,                            /* addr_len */
     40000000                      /* speed */
@@ -210,6 +226,22 @@ static struct ramtron_parts_s ramtron_parts[] =
     0x24,                         /* id1 */
     0x01,                         /* id2 */
     128L*1024L,                   /* size */
+    3,                            /* addr_len */
+    40000000                      /* speed */
+  },
+  {
+    "FM25V20A",                   /* name */
+    0x25,                         /* id1 */
+    0x08,                         /* id2 */
+    256L*1024L,                   /* size */
+    3,                            /* addr_len */
+    40000000                      /* speed */
+  },
+  {
+    "CY15B104Q",                  /* name */
+    0x26,                         /* id1 */
+    0x08,                         /* id2 */
+    512L*1024L,                   /* size */
     3,                            /* addr_len */
     40000000                      /* speed */
   },
@@ -652,6 +684,7 @@ static int ramtron_ioctl(FAR struct mtd_dev_s *dev, int cmd, unsigned long arg)
         {
         if ((unsigned long)arg > 0 && (unsigned long)arg <= RAMTRON_CLK_MAX) {
           priv->speed = (unsigned long)arg;
+          ret = OK;
           fvdbg("set bus speed to %lu\n", (unsigned long)priv->speed);
         } else {
           ret = -EINVAL; /* Bad argument */

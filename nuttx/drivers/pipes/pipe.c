@@ -82,7 +82,7 @@ static const struct file_operations pipe_fops =
   pipecommon_read,   /* read */
   pipecommon_write,  /* write */
   0,                 /* seek */
-  0                  /* ioctl */
+  pipecommon_ioctl   /* ioctl */
 #ifndef CONFIG_DISABLE_POLL
   , pipecommon_poll  /* poll */
 #endif
@@ -275,7 +275,10 @@ errout_with_wrfd:
 errout_with_driver:
   unregister_driver(devname);
 errout_with_dev:
-  pipecommon_freedev(dev);
+  if (dev)
+    {
+      pipecommon_freedev(dev);
+    }
 errout_with_pipe:
   pipe_free(pipeno);
 errout:
